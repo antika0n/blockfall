@@ -28,10 +28,10 @@ function preload() {
 
 function create() {
     
-    game.world.setBounds(0, 0, 1920, 1080);
+    game.world.setBounds(0, 0, 800, 600);
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.add.sprite(0, 0, 'sky');
-    game.add.sprite(200,50, 'grid');
+    game.gridsprite = game.add.sprite(200,50, 'grid');
     
     game.add.sprite(220,100, 'blk_red');
     game.add.sprite(220,125, 'blk_red');
@@ -47,12 +47,34 @@ function create() {
     game.grid = new Grid(20,10);
     game.grid.squares[1][7].setValue(Square.GOLD);
     
+    game.currentpiece = new TPiece();
+    var p = game.currentpiece;
+    
+    
+    
     console.log(game.grid.isLineEmpty(1));
+    
+    game.cursors = game.input.keyboard.createCursorKeys();
+    
+    game.input.keyboard.onUpCallback = function( e ) {
+        if(e.keyCode == Phaser.Keyboard.UP){
+            game.currentpiece.rotateLeft();
+        }
+        if(e.keyCode == Phaser.Keyboard.LEFT){
+            game.currentpiece.moveLeft();
+        }
+    }
     
     
     
 }
 
 function update() {
-    game.camera.focusOnXY(100,0);
+    
+    //if (game.cursors.up.isDown)
+    //{
+    //    game.currentpiece.rotateLeft();
+    //}
+    
+    
 }
