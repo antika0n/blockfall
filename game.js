@@ -28,6 +28,8 @@ function preload() {
 
 function create() {
     
+    game.collisionflag = false;
+    
     game.world.setBounds(0, 0, 800, 600);
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.add.sprite(0, 0, 'sky');
@@ -75,6 +77,32 @@ function create() {
 
 function update() {
     game.physics.arcade.collide(game.piecegroup, game.gridgroup);
+    
+    
+    if (game.collisionflag) {
+        game.currentpiece.kill();
+        game.collisionflag = false;
+        
+        var newpiece;
+        var r = Math.floor((Math.random() * 2) + 1);
+        switch (r) { 
+           case 1:
+                newpiece = new TPiece();
+                break;
+            case 2:
+                newpiece = new BarPiece();
+                break;
+        }
+        
+        
+        game.currentpiece = newpiece;
+        
+        while ( game.grid.tetris() );
+        
+        
+    }
+    
+    
     //game.physics.arcade.collide(game.piecegroup, game.piecegroup);
     //if (game.cursors.up.isDown)
     //{

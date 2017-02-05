@@ -38,18 +38,44 @@ class Piece {
         ];
         this.sprites = [ null, null, null, null ];
         this.spriteasset = 'blk_grey';
-        this.type = Piece.TYPE_BAR;
+        this.type = this.TYPE_BAR;
         this.rotation = 0;
-        this.gravity = 50;
+        this.gravity = 25;
+        
+    }
+    
+    kill() {
+        for (var i = 0; i < 4; ++i) {
+            var sp = this.sprites[i];
+            sp.kill();
+            sp.destroy();
+        }
         
     }
     
     collide() {
-        console.log("COLLISION!");
-        for (var i = 0; i < 4; ++i) {
+
+        if (!game.collisionflag) {
             
+            game.collisionflag = true;
+            console.log("COLLISION!");
+
+            for (var i = 0; i < 4; ++i) {
+
+                var sp = this.sprites[i];
+                var gridx = (sp.x - 10 - game.gridsprite.x) / 25;
+                var gridy = 20 - Math.floor((sp.y - 10 - game.gridsprite.y) / 25) - 2;
+
+                var newx = gridx * 25 + game.gridsprite.x + 10;
+                var newy = (game.gridsprite.y + game.gridsprite.height - 10 - 25) - (gridy * 25);
+                console.log("gx:"+gridx+" gy:"+gridy + "nx:"+newx + "ny:"+newy);
+                var newblock = game.gridgroup.create(newx, newy, this.spriteasset);
+                game.grid.squares[gridy][gridx].setValue(1);
+                game.grid.squares[gridy][gridx].setSprite(newblock);
+                newblock.body.immovable = true;
+                
+            }
         }
-        
     }
     
     createSprite(i) {
@@ -137,7 +163,7 @@ class Piece {
             var newgx = (newx - 10 - game.gridsprite.x) / 25;
                     
             var newy = this.sprites[i].y; 
-            var newgy =  20 - Math.floor((newy - 10 - game.gridsprite.y) / 25) - 1;
+            var newgy =  20 - Math.floor((newy - 10 - game.gridsprite.y) / 25) - 2 ;
                     
             if (newgx < 0) {
                 blocked = true;
@@ -170,7 +196,7 @@ class Piece {
             var newgx = (newx - 10 - game.gridsprite.x) / 25;
                     
             var newy = this.sprites[i].y; 
-            var newgy =  20 - Math.floor((newy - 10 - game.gridsprite.y) / 25) - 1;
+            var newgy =  20 - Math.floor((newy - 10 - game.gridsprite.y) / 25) - 2;
                     
             if (newgx >= game.grid.width) {
                 blocked = true;
@@ -178,7 +204,7 @@ class Piece {
             var value = game.grid.squares[newgy][newgx].value;
             console.log(i+": "+newx+"("+newgx+")x"+newy+"("+newgy+") - "+value);
             
-            if (game.grid.squares[newgy][newgx].value !== SQUARE_EMPTY) {
+            if (value !== SQUARE_EMPTY) {
                 blocked = true;
             }
 
@@ -262,7 +288,7 @@ class TPiece extends Piece {
 
         ];
         
-        console.log("T PIECE!");
+        console.log("T PIECE!"); 
         this.spriteasset = 'blk_gold';
         this.type = Piece.TYPE_T;
         
