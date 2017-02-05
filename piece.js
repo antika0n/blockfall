@@ -40,8 +40,25 @@ class Piece {
         this.spriteasset = 'blk_grey';
         this.type = Piece.TYPE_BAR;
         this.rotation = 0;
+        this.gravity = 50;
         
+    }
+    
+    collide() {
+        console.log("COLLISION!");
+        for (var i = 0; i < 4; ++i) {
+            
+        }
         
+    }
+    
+    createSprite(i) {
+        //face1.body.onCollide = new Phaser.Signal();
+        //face1.body.onCollide.add(hitSprite, this);
+        this.sprites[i] = game.add.sprite(0,0, this.spriteasset);
+        game.piecegroup.add(this.sprites[i]);
+        this.sprites[i].body.onCollide = new Phaser.Signal();
+        this.sprites[i].body.onCollide.add(this.collide, this);
     }
     
     setX(x) {
@@ -49,12 +66,14 @@ class Piece {
         for (var i = 0; i < 4; ++i) {
             var rot = this.rotations[this.rotation];
             if (this.sprites[i] === null) {
-                this.sprites[i] = game.add.sprite(0,0, this.spriteasset);
+                this.createSprite(i);
+                //this.sprites[i] = game.add.sprite(0,0, this.spriteasset);
+                //game.piecegroup.add(this.sprites[i]);
             }
             var sp = this.sprites[i];
             game.physics.arcade.enable(sp);
             sp.body.bounce = 5;
-            sp.body.gravity.y = 5;
+            sp.body.gravity.y = this.gravity;
             sp.body.collideWorldBounds = true;
             sp.x = (game.gridsprite.x+10)+(x*25)+(rot.dx[i]*25) ;
             console.log("X:"+x+"/"+sp.x);
@@ -66,13 +85,15 @@ class Piece {
         for (var i = 0; i < 4; ++i) {
             var rot = this.rotations[this.rotation];
             if (this.sprites[i] === null) {
-                this.sprites[i] = game.add.sprite(0,0, this.spriteasset);
+                this.createSprite(i);
+                //this.sprites[i] = game.add.sprite(0,0, this.spriteasset);
+                //game.piecegroup.add(this.sprites[i]);
                 
             }
             var sp = this.sprites[i];
             game.physics.arcade.enable(sp);
             sp.body.bounce = 5;
-            sp.body.gravity.y = 50;
+            sp.body.gravity.y = this.gravity;
             sp.body.collideWorldBounds = true;
             sp.y = (game.gridsprite.height-10)-(y*25)+(rot.dy[i]*25);
             console.log("Y:"+y+"/"+sp.y);
@@ -113,15 +134,21 @@ class Piece {
         
             // Can we go further left on the grid?
             var newx = this.sprites[i].x - 25;
-            var newgx = (newx - 10 - game.gridsprite.x) / 25; 
+            var newgx = (newx - 10 - game.gridsprite.x) / 25;
+                    
+            var newy = this.sprites[i].y; 
+            var newgy =  20 - Math.floor((newy - 10 - game.gridsprite.y) / 25) - 1;
                     
             if (newgx < 0) {
                 blocked = true;
             }
-
-            console.log(i+": "+newx+" x "+newgx);
-
+            var value = game.grid.squares[newgy][newgx].value;
+            console.log(i+": "+newx+"("+newgx+")x"+newy+"("+newgy+") - "+value);
             
+            if (value !== SQUARE_EMPTY) {
+                blocked = true;
+            }
+
         }
         
         if (!blocked) {
@@ -134,18 +161,76 @@ class Piece {
     }
     
     moveRight() {
+        var blocked = false;
         
+        for (var i = 0; i < 4; i++) {
+        
+            // Can we go further left on the grid?
+            var newx = this.sprites[i].x + 25;
+            var newgx = (newx - 10 - game.gridsprite.x) / 25;
+                    
+            var newy = this.sprites[i].y; 
+            var newgy =  20 - Math.floor((newy - 10 - game.gridsprite.y) / 25) - 1;
+                    
+            if (newgx >= game.grid.width) {
+                blocked = true;
+            }
+            var value = game.grid.squares[newgy][newgx].value;
+            console.log(i+": "+newx+"("+newgx+")x"+newy+"("+newgy+") - "+value);
+            
+            if (game.grid.squares[newgy][newgx].value !== SQUARE_EMPTY) {
+                blocked = true;
+            }
+
+        }
+        
+        if (!blocked) {
+            for (var i = 0; i < 4; i++) {
+                this.sprites[i].x += 25;
+            }
+        }
     }
     
     rotateLeft() {
-        --this.rotation;
-        if (this.rotation < 0) {
-            this.rotation = 3;
+        
+        var newrotation = this.rotation;
+        var blocked = false;
+        
+        newrotation--;
+        if (newrotation < 0) {
+            newrotation = 3;
         }
-        this.do_rotate();
+        for (var i = 0; i < 4; i++) {
+            var rot = this.rotations[newrotation];
+            
+            var newx = this.sprites[i].x + (rot.dx[i] * 25);
+            var newgx = (newx - 10 - game.gridsprite.x) / 25;
+                    
+            var newy = this.sprites[i].y + (rot.dy[i] * 25); 
+            var newgy =  20 - Math.floor((newy - 10 - game.gridsprite.y) / 25) - 1;
+            
+            if (newgx >= game.grid.width) {
+                blocked = true;
+            }
+            if (newgx < 0) {
+                blocked = true;
+            }
+            if (newgy >= game.grid.height) {
+                blocked = true;
+            }
+            if (newgy < 0) {
+                blocked = true;
+            }
+            
+            
+        }
+        if (!blocked) {
+            this.rotation = newrotation;
+            this.do_rotate();
+        }
     }
     
-    rotateTight() {
+    rotateRight() {
         ++this.rotation;
         if (this.rotation > 3) {
             this.rotation = 0;

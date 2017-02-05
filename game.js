@@ -12,7 +12,7 @@ function preload() {
     game.load.image('blk_gold', 'pics/blk_gold.png');
     game.load.image('blk_purple', 'pics/blk_purple.png');
     game.load.image('blk_grey', 'pics/blk_grey.png');
-    
+    game.load.image('bottom', 'pics/bottom.png');
     
     
     
@@ -31,30 +31,31 @@ function create() {
     game.world.setBounds(0, 0, 800, 600);
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.add.sprite(0, 0, 'sky');
-    game.gridsprite = game.add.sprite(200,50, 'grid');
+    game.gridsprite = game.add.sprite(265,40, 'grid');
     
-    game.add.sprite(220,100, 'blk_red');
-    game.add.sprite(220,125, 'blk_red');
-    game.add.sprite(220,150, 'blk_red');
-    game.add.sprite(220,175, 'blk_red');
+    game.grid = new Grid(10,20);
+ 
     
-    game.add.sprite(270,100, 'blk_green');
-    game.add.sprite(295,100, 'blk_green');
-    game.add.sprite(295,125, 'blk_green');
-    game.add.sprite(320,125, 'blk_green');
+    game.piecegroup = game.add.group();
+    game.piecegroup.enableBody = true;
     
-    
-    game.grid = new Grid(20,10);
-    game.grid.squares[1][7].setValue(Square.GOLD);
+    game.gridgroup = game.add.group();
+    game.gridgroup.enableBody = true;
+    game.bottomsprite = game.gridgroup.create(game.gridsprite.x+10, game.gridsprite.height +game.gridsprite.y- 10, 'bottom');
+    game.bottomsprite.body.immovable = true;
+    game.physics.arcade.enable(game.bottomsprite);
     
     game.currentpiece = new TPiece();
     var p = game.currentpiece;
     
-    
-    
     console.log(game.grid.isLineEmpty(1));
     
     game.cursors = game.input.keyboard.createCursorKeys();
+    
+    
+    
+
+    
     
     game.input.keyboard.onUpCallback = function( e ) {
         if(e.keyCode == Phaser.Keyboard.UP){
@@ -63,6 +64,9 @@ function create() {
         if(e.keyCode == Phaser.Keyboard.LEFT){
             game.currentpiece.moveLeft();
         }
+        if(e.keyCode == Phaser.Keyboard.RIGHT){
+            game.currentpiece.moveRight();
+        }
     }
     
     
@@ -70,7 +74,8 @@ function create() {
 }
 
 function update() {
-    
+    game.physics.arcade.collide(game.piecegroup, game.gridgroup);
+    //game.physics.arcade.collide(game.piecegroup, game.piecegroup);
     //if (game.cursors.up.isDown)
     //{
     //    game.currentpiece.rotateLeft();

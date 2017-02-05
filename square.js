@@ -5,33 +5,44 @@
  */
 
 
-Square.EMPTY = 0;
-Square.RED = 1;
-Square.GOLD = 2;
-Square.GREEN = 3;
-Square.BLUE = 4;
-Square.PURPLE = 5;
-Square.GREY = 6;
+SQUARE_EMPTY = 0;
+SQUARE_RED = 1;
+SQUARE_GOLD = 2;
+SQUARE_GREEN = 3;
+SQUARE_BLUE = 4;
+SQUARE_PURPLE = 5;
+SQUARE_GREY = 6;
 
-function Square (value, sprite) {
+class Square {
+
     
-    this.setValue(value);
-    this.setSprite(sprite);
+
+
+    constructor (value, sprite) {
+        this.setValue(value);
+        this.setSprite(sprite);
+        
+        
+        
+        
+        
+    }
     
+
+
+    setValue(value) {
+        this.value = value;
+    };
+
+    getValue() {
+        return this.value;
+    };
+
+    setSprite(sprite) {
+        this.sprite = sprite;
+    };
+
+    getSprite() {
+        return this.sprite;
+    };
 }
-
-Square.prototype.setValue = function(value) {
-    this.value = value;
-};
-
-Square.prototype.getValue = function() {
-    return this.value;
-};
-
-Square.prototype.setSprite = function(sprite) {
-    this.sprite = sprite;
-};
-
-Square.prototype.getSprite = function() {
-    return this.sprite;
-};

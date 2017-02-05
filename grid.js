@@ -9,9 +9,22 @@ function Grid (width, height) {
     this.width = width;
     this.height = height;
     
-    this.squares = new Array(height).fill(
-            new Array(width).fill(new Square(Square.EMPTY, null))
-            ); 
+    //this.squares = new Array(height).fill(
+    //        new Array(width).fill(null));
+    //        ; 
+    
+    this.squares = [];
+    
+    for (var y = 0; y < height; y++) {
+        this.squares[y] = [];
+        for (var x = 0; x < width; x++) {
+            var row = this.squares[y];
+            row[x] = new Square(SQUARE_EMPTY, null);
+            
+        }
+    }
+    
+    
 }
  
 Grid.prototype.isLineEmpty = function(line) {
