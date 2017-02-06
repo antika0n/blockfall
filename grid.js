@@ -60,6 +60,21 @@ Grid.prototype.isLineFull = function(line) {
     
 };
 
+Grid.prototype.explode = function(sp) {
+
+    var emitter = game.add.emitter(0, 0, 5);
+    game.snd_line.play();
+    emitter.makeParticles(sp.key);
+    emitter.gravity = 2;
+    emitter.x = sp.x;
+    emitter.y = sp.y;
+    emitter.minParticleSpeed.setTo(-1200,-1200);
+    emitter.maxParticleSpeed.setTo(1200,1200);
+    emitter.start(true, 2500, null, 5);
+    
+    sp.kill();
+}
+
 Grid.prototype.tetris = function() {
     
     var found = false;
@@ -85,7 +100,7 @@ Grid.prototype.tetris = function() {
                 row[j].setValue(0);
                 var sp = row[j].getSprite();
                 if (sp !== null) {
-                    sp.kill();
+                    this.explode(sp);
                 }
                 row[j].setSprite(null);
             }
@@ -153,7 +168,7 @@ Grid.prototype.triple = function() {
                 row[j].setValue(0);
                 var sp = row[j].getSprite();
                 if (sp !== null) {
-                    sp.kill();
+                    this.explode(sp);
                 }
                 row[j].setSprite(null);
             }
@@ -219,7 +234,7 @@ Grid.prototype.double = function() {
                 row[j].setValue(0);
                 var sp = row[j].getSprite();
                 if (sp !== null) {
-                    sp.kill();
+                    this.explode(sp);
                 }
                 row[j].setSprite(null);
             }
@@ -283,7 +298,9 @@ Grid.prototype.single = function() {
             row[j].setValue(0);
             var sp = row[j].getSprite();
             if (sp !== null) {
-                sp.kill();
+                
+                this.explode(sp);
+                
             }
             row[j].setSprite(null);
         }

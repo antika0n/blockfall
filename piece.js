@@ -13,10 +13,10 @@ class Piece {
         this.TYPE_T = 2;
         
         this.rotations = [
-                { dx: [-1, 0, 1, 2], dy:[ 0, 0, 0, 0] }, 
-                { dx: [ 0, 0, 0, 0], dy:[ 1, 0,-1,-2] },
-                { dx: [-1, 0, 1, 2], dy:[ 0, 0, 0, 0] },
-                { dx: [ 0, 0, 0, 0], dy:[ 1, 0,-1,-2] }
+                { dx: [-1, 0, 1, -2], dy:[ 0, 0, 0, 0] }, 
+                { dx: [ 0, 0, 0, 0], dy:[ 1, 0,-1, 2] },
+                { dx: [-1, 0, 1, -2], dy:[ 0, 0, 0, 0] },
+                { dx: [ 0, 0, 0, 0], dy:[ 1, 0,-1, 2] }
         ];
         this.sprites = [ null, null, null, null ];
         this.spriteasset = 'blk_grey';
@@ -233,9 +233,9 @@ class Piece {
             if (newgx < 0) {
                 blocked = true;
             }
-            if (newgy >= game.grid.height) {
-                blocked = true;
-            }
+            //if (newgy >= game.grid.height) {
+            //    blocked = true;
+            //}
             if (newgy < 0) {
                 blocked = true;
             }
@@ -243,6 +243,7 @@ class Piece {
             
         }
         if (!blocked) {
+            game.snd_rotate.play();
             this.rotation = newrotation;
             this.do_rotate();
         }
@@ -338,3 +339,77 @@ class S2Piece extends Piece {
     }
 }
 
+class L1Piece extends Piece {
+    
+    constructor() {
+        
+        super();
+        
+        this.rotations = [
+                { dx: [-1, 0, 1,-1], dy:[ 0, 0, 0, 1] }, 
+                { dx: [ 0, 0, 0,-1], dy:[ 1, 0,-1,-1] },
+                { dx: [-1, 0, 1, 1], dy:[ 0, 0, 0,-1] },
+                { dx: [ 0, 0, 0, 1], dy:[-1, 0, 1, 1] }
+
+        ];
+        
+        console.log("L1 PIECE!"); 
+        this.spriteasset = 'blk_purple';
+        this.type = Piece.TYPE_T;
+        
+        this.setPos(4,19);
+        //this.rotateLeft();
+        
+    }
+    
+}
+
+class L2Piece extends Piece {
+    
+    constructor() {
+        
+        super();
+        
+        this.rotations = [
+                { dx: [-1, 0, 1, 1], dy:[ 0, 0, 0, 1] }, 
+                { dx: [ 0, 0, 0,-1], dy:[ 1, 0,-1, 1] },
+                { dx: [-1, 0, 1,-1], dy:[ 0, 0, 0,-1] },
+                { dx: [ 0, 0, 0, 1], dy:[ 1, 0,-1,-1] }
+
+        ];
+        
+        console.log("S2 PIECE!"); 
+        this.spriteasset = 'blk_green';
+        this.type = Piece.TYPE_T;
+        
+        this.setPos(4,19);
+        //this.rotateLeft();
+        
+    }
+    
+}
+
+class CubePiece extends Piece {
+    
+    constructor() {
+        
+        super();
+        
+        this.rotations = [
+                { dx: [-1, 0,-1, 0], dy:[ 0, 0, 1, 1] }, 
+                { dx: [-1, 0,-1, 0], dy:[ 0, 0, 1, 1] },
+                { dx: [-1, 0,-1, 0], dy:[ 0, 0, 1, 1] },
+                { dx: [-1, 0,-1, 0], dy:[ 0, 0, 1, 1] }
+
+        ];
+        
+        console.log("S2 PIECE!"); 
+        this.spriteasset = 'blk_darkgrey';
+        this.type = Piece.TYPE_T;
+        
+        this.setPos(4,19);
+        //this.rotateLeft();
+        
+    }
+    
+}

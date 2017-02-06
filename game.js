@@ -4,25 +4,21 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create
 
 
 function preload() {
+    
     game.load.image('sky', 'pics/bg.jpg');
+    game.load.image('overlay', 'pics/bgoverlay.png');
     game.load.image('grid', 'pics/grid.png');
     game.load.image('blk_red', 'pics/blk_red.png');
     game.load.image('blk_green', 'pics/blk_green.png');
     game.load.image('blk_blue', 'pics/blk_blue.png');
     game.load.image('blk_gold', 'pics/blk_gold.png');
     game.load.image('blk_purple', 'pics/blk_purple.png');
+    game.load.image('blk_darkgrey', 'pics/blk_darkgrey.png');
     game.load.image('blk_grey', 'pics/blk_grey.png');
     game.load.image('bottom', 'pics/bottom.png');
     
-    
-    
-    
-    
-    
-    
-    //game.load.image('ground', 'assets/platform.png');
-    //game.load.image('star', 'assets/star.png');
-    //game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+    game.load.audio('rotate', 'sounds/rotate.mp3');
+    game.load.audio('line', 'sounds/line.mp3');
     
 }
 
@@ -34,7 +30,11 @@ function create() {
     
     game.world.setBounds(0, 0, 800, 600);
     game.physics.startSystem(Phaser.Physics.ARCADE);
+    game.snd_rotate = game.add.audio('rotate');
+    game.snd_line = game.add.audio('line');
+    
     game.add.sprite(0, 0, 'sky');
+    game.add.sprite(0, 0, 'overlay');
     game.gridsprite = game.add.sprite(265,40, 'grid');
     
     game.grid = new Grid(10,20);
@@ -119,7 +119,7 @@ function update() {
             game.collisionflag = false;
 
             var newpiece;
-            var r = Math.floor((Math.random() * 4) + 1);
+            var r = Math.floor((Math.random() * 7) + 1);
             switch (r) { 
                case 1:
                     newpiece = new TPiece();
@@ -132,6 +132,15 @@ function update() {
                     break;
                 case 4:
                     newpiece = new S2Piece();
+                    break;
+                case 5:
+                    newpiece = new L1Piece();
+                    break;
+                case 6:
+                    newpiece = new L2Piece();
+                    break;
+                case 7:
+                    newpiece = new CubePiece();
                     break;
             }
 
