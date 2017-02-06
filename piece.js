@@ -4,25 +4,7 @@
  * and open the template in the editor.
  */
 
-/*
-Piece.OFFSETS.BAR = [
-    { dx: [-1, 0, 1, 2], dy:[ 0, 0, 0, 0], sprite: null }, 
-    { dx: [ 0, 0, 0, 0], dy:[ 1, 0,-1,-2], sprite: null },
-    { dx: [-1, 0, 1, 2], dy:[ 0, 0, 0, 0], sprite: null },
-    { dx: [ 0, 0, 0, 0], dy:[ 1, 0,-1,-2], sprite: null }
-];
 
-Piece.OFFSETS.T = [
-    { dx: [-1, 0, 1, 0], dy:[ 0, 0, 0, 1], sprite: null }, 
-    { dx: [ 0, 0, 0, 1], dy:[ 1, 0,-1, 0], sprite: null },
-    { dx: [-1, 0, 1, 0], dy:[ 0, 0, 0,-1], sprite: null },
-    { dx: [ 0, 0, 0,-1], dy:[ 1, 0,-1,-1], sprite: null }
-];
-
-Piece.TYPE.BAR = 1;
-Piece.TYPE.T = 2;
-
-*/
 class Piece {
     
     constructor() {
@@ -40,8 +22,14 @@ class Piece {
         this.spriteasset = 'blk_grey';
         this.type = this.TYPE_BAR;
         this.rotation = 0;
-        this.gravity = 25;
-        
+        this.gravity = game.currentgravity;
+    }
+    
+    setGravity(g) {
+        for (var i = 0; i < 4; ++i) {
+            var sp = this.sprites[i];
+            sp.body.gravity.y = g;
+        }
     }
     
     kill() {
@@ -164,12 +152,14 @@ class Piece {
                     
             var newy = this.sprites[i].y; 
             var newgy =  20 - Math.floor((newy - 10 - game.gridsprite.y) / 25) - 2 ;
-                    
-            if (newgx < 0) {
+            
+            var value = -1;
+            if ( (newgx < 0) || (newgx >= game.grid.width) ||
+                 (newgy < 0) || (newgy >= game.grid.height) ) {
                 blocked = true;
+            } else {
+                value = game.grid.squares[newgy][newgx].value;
             }
-            var value = game.grid.squares[newgy][newgx].value;
-            console.log(i+": "+newx+"("+newgx+")x"+newy+"("+newgy+") - "+value);
             
             if (value !== SQUARE_EMPTY) {
                 blocked = true;
@@ -197,12 +187,14 @@ class Piece {
                     
             var newy = this.sprites[i].y; 
             var newgy =  20 - Math.floor((newy - 10 - game.gridsprite.y) / 25) - 2;
-                    
-            if (newgx >= game.grid.width) {
+
+            var value = -1;
+            if ( (newgx < 0) || (newgx >= game.grid.width) ||
+                 (newgy < 0) || (newgy >= game.grid.height) ) {
                 blocked = true;
+            } else {
+                value = game.grid.squares[newgy][newgx].value;
             }
-            var value = game.grid.squares[newgy][newgx].value;
-            console.log(i+": "+newx+"("+newgx+")x"+newy+"("+newgy+") - "+value);
             
             if (value !== SQUARE_EMPTY) {
                 blocked = true;
@@ -270,7 +262,7 @@ class Piece {
 class BarPiece extends Piece {
     constructor() {
         super();
-        this.setPos(4,18);
+        this.setPos(4,19);
     }
 }
 
@@ -292,11 +284,57 @@ class TPiece extends Piece {
         this.spriteasset = 'blk_gold';
         this.type = Piece.TYPE_T;
         
-        this.setPos(4,18);
+        this.setPos(4,19);
         //this.rotateLeft();
         
     }
 }
 
+class S1Piece extends Piece {
+    
+    constructor() {
+        
+        super();
+        
+        this.rotations = [
+                { dx: [-1, 0, 0,-1], dy:[ 0, 0, 1,-1] }, 
+                { dx: [ 0, 0, 1,-1], dy:[ 1, 0, 0, 1] },
+                { dx: [-1, 0, 0,-1], dy:[ 0, 0, 1,-1] },
+                { dx: [ 0, 0, 1,-1], dy:[ 1, 0, 0, 1] }
 
+        ];
+        
+        console.log("S1 PIECE!"); 
+        this.spriteasset = 'blk_red';
+        this.type = Piece.TYPE_T;
+        
+        this.setPos(4,19);
+        //this.rotateLeft();
+        
+    }
+}
+
+class S2Piece extends Piece {
+    
+    constructor() {
+        
+        super();
+        
+        this.rotations = [
+                { dx: [ 1, 0, 0, 1], dy:[ 0, 0, 1,-1] }, 
+                { dx: [-1, 0, 0, 1], dy:[ 0, 0, 1, 1] },
+                { dx: [ 1, 0, 0, 1], dy:[ 0, 0, 1,-1] },
+                { dx: [-1, 0, 0, 1], dy:[ 0, 0, 1, 1] }
+
+        ];
+        
+        console.log("S2 PIECE!"); 
+        this.spriteasset = 'blk_blue';
+        this.type = Piece.TYPE_T;
+        
+        this.setPos(4,19);
+        //this.rotateLeft();
+        
+    }
+}
 

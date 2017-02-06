@@ -30,16 +30,12 @@ function Grid (width, height) {
 Grid.prototype.isLineEmpty = function(line) {
   
     var result = true;
-  
-    for (var i = 0; i < this.height; ++i) {
-        
-        var row = this.squares[i];
-        for (var j = 0; j < this.width; ++j) {
-            if ( row[j].getValue() !== 0) {
-                result = false;
-            }
+    
+    var row = this.squares[line];
+    for (var j = 0; j < this.width; ++j) {
+        if ( row[j].getValue() !== 0) {
+            result = false;
         }
-        
     }
     
     return result;

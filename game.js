@@ -29,6 +29,8 @@ function preload() {
 function create() {
     
     game.collisionflag = false;
+    game.running = true;
+    game.currentgravity = 50;
     
     game.world.setBounds(0, 0, 800, 600);
     game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -48,35 +50,67 @@ function create() {
     game.physics.arcade.enable(game.bottomsprite);
     
     game.currentpiece = new TPiece();
-    var p = game.currentpiece;
+    var p = game.currentpiece.setGravity(game.currentgravity);
     
     console.log(game.grid.isLineEmpty(1));
     
     game.cursors = game.input.keyboard.createCursorKeys();
     
-    
-    
-
-    
+    leftkey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
+    rightkey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+    upkey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
+    downkey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
     
     game.input.keyboard.onUpCallback = function( e ) {
-        if(e.keyCode == Phaser.Keyboard.UP){
-            game.currentpiece.rotateLeft();
+        if(e.keyCode == Phaser.Keyboard.DOWN){
+            game.currentpiece.setGravity(1750);
         }
         if(e.keyCode == Phaser.Keyboard.LEFT){
-            game.currentpiece.moveLeft();
+            //game.currentpiece.moveLeft();
         }
         if(e.keyCode == Phaser.Keyboard.RIGHT){
-            game.currentpiece.moveRight();
+            //game.currentpiece.moveRight();
         }
     }
-    
     
     
 }
 
 function update() {
     game.physics.arcade.collide(game.piecegroup, game.gridgroup);
+    
+    if (leftkey.isDown) {
+        if (leftkey.duration > leftkey.next) {
+            leftkey.next = leftkey.duration + 125;
+            game.currentpiece.moveLeft();
+            
+        }
+    } else if (leftkey.isUp) {
+        leftkey.next = 0;
+    }
+    
+    if (rightkey.isDown) {
+        if (rightkey.duration > rightkey.next) {
+            rightkey.next = rightkey.duration + 125;
+            game.currentpiece.moveRight();
+            
+        }
+    } else if (rightkey.isUp) {
+        rightkey.next = 0;
+    }
+    
+    if (upkey.isDown) {
+        if (upkey.duration > upkey.next) {
+            upkey.next = upkey.duration + 125;
+            game.currentpiece.rotateLeft();
+            
+        }
+    } else if (upkey.isUp) {
+        upkey.next = 0;
+    }
+    
+    
+    
     
     if (game.running) {
     
@@ -85,13 +119,19 @@ function update() {
             game.collisionflag = false;
 
             var newpiece;
-            var r = Math.floor((Math.random() * 2) + 1);
+            var r = Math.floor((Math.random() * 4) + 1);
             switch (r) { 
                case 1:
                     newpiece = new TPiece();
                     break;
                 case 2:
                     newpiece = new BarPiece();
+                    break;
+                case 3:
+                    newpiece = new S1Piece();
+                    break;
+                case 4:
+                    newpiece = new S2Piece();
                     break;
             }
 
@@ -101,17 +141,14 @@ function update() {
             while ( game.grid.tetris() || game.grid.triple() || game.grid.double() 
                     || game.grid.single());
 
-
-
+        }
+        
+        if (!game.grid.isLineEmpty(19)) {
+            game.running = false;
         }
     }
     
-    
-    //game.physics.arcade.collide(game.piecegroup, game.piecegroup);
-    //if (game.cursors.up.isDown)
-    //{
-    //    game.currentpiece.rotateLeft();
-    //}
+
     
     
 }
