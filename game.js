@@ -6,7 +6,7 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create
 function preload() {
     
     game.load.image('sky', 'pics/bg.jpg');
-    game.load.image('overlay', 'pics/bgoverlay.png');
+    game.load.image('logo', 'pics/blockfall_logo.png');
     game.load.image('grid', 'pics/grid.png');
     game.load.image('blk_red', 'pics/blk_red.png');
     game.load.image('blk_green', 'pics/blk_green.png');
@@ -34,8 +34,8 @@ function create() {
     game.snd_line = game.add.audio('line');
     
     game.add.sprite(0, 0, 'sky');
-    game.add.sprite(0, 0, 'overlay');
-    game.gridsprite = game.add.sprite(265,40, 'grid');
+    game.add.sprite(380, 30, 'logo');
+    game.gridsprite = game.add.sprite(40,40, 'grid');
     
     game.grid = new Grid(10,20);
  
