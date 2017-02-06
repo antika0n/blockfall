@@ -78,28 +78,32 @@ function create() {
 function update() {
     game.physics.arcade.collide(game.piecegroup, game.gridgroup);
     
+    if (game.running) {
     
-    if (game.collisionflag) {
-        game.currentpiece.kill();
-        game.collisionflag = false;
-        
-        var newpiece;
-        var r = Math.floor((Math.random() * 2) + 1);
-        switch (r) { 
-           case 1:
-                newpiece = new TPiece();
-                break;
-            case 2:
-                newpiece = new BarPiece();
-                break;
+        if (game.collisionflag) {
+            game.currentpiece.kill();
+            game.collisionflag = false;
+
+            var newpiece;
+            var r = Math.floor((Math.random() * 2) + 1);
+            switch (r) { 
+               case 1:
+                    newpiece = new TPiece();
+                    break;
+                case 2:
+                    newpiece = new BarPiece();
+                    break;
+            }
+
+
+            game.currentpiece = newpiece;
+
+            while ( game.grid.tetris() || game.grid.triple() || game.grid.double() 
+                    || game.grid.single());
+
+
+
         }
-        
-        
-        game.currentpiece = newpiece;
-        
-        while ( game.grid.tetris() );
-        
-        
     }
     
     
